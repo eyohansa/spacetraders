@@ -1,27 +1,32 @@
-use std::collections::HashMap;
+use std::fs;
+// use reqwest::{Client, Error};
+use serde_json::{Result, Value};
 
-use serde::{Serialize, Deserialize};
-use reqwest::{Client, Error};
+// use spacetraders::Data;
 
-#[derive(Serialize, Deserialize, Debug)]
-struct JsonResponse {
-    json: HashMap<String, String>
-}
+fn main() -> Result<()> {
+    // let mut data = HashMap::new();
+    // data.insert("symbol", "USER_01");
+    // data.insert("faction", "COSMIC");
 
+    // let client = Client::new();
+    // let res = client.post("https://api.spacetraders.io/v2/register")
+    //     .header("content", "application/json")
+    //     .json(&data)
+    //     .send()
+    //     .await?
+    //     .json::<JsonResponse>()
+    //     .await?;
 
-#[tokio::main]
-async fn main() -> Result<(), Error> {
-    let mut data = HashMap::new();
-    data.insert("symbol", "ASHYCRE");
-    data.insert("faction", "Cosmic");
+    // println!("{:#?}", res);
 
-    let client = Client::new();
-    let res = client.post("https://api.spacetraders.io/v2/register")
-        .json(&data)
-        .send()
-        .await?;
+    let contents = fs::read_to_string("response.example.json")
+        .expect("File not found");
 
-    println!("{:#?}", res);
+    let json: Value = serde_json::from_str(&contents)?;
+
+    println!("{:?}", json);
 
     Ok(())
+
 }
