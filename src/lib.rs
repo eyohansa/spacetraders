@@ -3,6 +3,11 @@ use serde::{Serialize, Deserialize};
 use chrono::{DateTime, Utc};
 
 #[derive(Serialize, Deserialize)]
+pub struct Player {
+    pub data: Data
+}
+
+#[derive(Serialize, Deserialize)]
 pub struct Data {
     pub token: String,
     pub agent: Agent,
@@ -12,6 +17,7 @@ pub struct Data {
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all="camelCase")]
 pub struct Agent {
     pub account_id: String,
     pub symbol: String,
@@ -20,9 +26,11 @@ pub struct Agent {
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all="camelCase")]
 pub struct Contract {
     pub id: String,
     pub faction_symbol: String,
+    #[serde(rename="type")]
     pub contact_type: String,
     pub terms: ContractTerm,
     pub accepted: bool,
@@ -38,12 +46,14 @@ pub struct ContractTerm {
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all="camelCase")]
 pub struct ContractTermPayment {
     pub on_accepted: i32,
     pub on_fulfilled: i32
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all="camelCase")]
 pub struct ContractTermDeliverable {
     pub trade_symbol: String,
     pub destination_symbol: String,
@@ -83,13 +93,14 @@ pub struct Ship {
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all="camelCase")]
 pub struct ShipNav {
     pub system_symbol: String,
     pub waypoint_symbol: String,
-
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all="camelCase")]
 pub struct NavRoute {
     pub departure: Location,
     pub destination: Location,
@@ -98,8 +109,10 @@ pub struct NavRoute {
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all="camelCase")]
 pub struct Location {
     pub symbol: String,
+    #[serde(rename="type")]
     pub loc_type: String,
     pub system_symbol: String,
     pub x: i32,
@@ -130,6 +143,7 @@ pub struct FuelConsumption {
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all="camelCase")]
 pub struct Frame {
     pub symbol: String,
     pub name: String,
@@ -142,6 +156,7 @@ pub struct Frame {
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all="camelCase")]
 pub struct Reactor {
     pub symbol: String,
     pub name: String,
@@ -161,7 +176,8 @@ pub struct Engine {
     pub requirements: HashMap<String, i32>
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Default)]
+#[serde(default)]
 pub struct ShipModule {
     pub symbol: String,
     pub name: String,
@@ -170,7 +186,8 @@ pub struct ShipModule {
     pub requirements: HashMap<String, i32>
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Default)]
+#[serde(default)]
 pub struct ShipMount {
     pub symbol: String,
     pub name: String,
@@ -181,6 +198,7 @@ pub struct ShipMount {
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all="camelCase")]
 pub struct ShipRegistration {
     pub name: String,
     pub faction_symbol: String,
@@ -200,4 +218,20 @@ pub struct ShipCargoInventory {
     pub name: String,
     pub description: String,
     pub units: i32
+}
+
+impl Data {
+    pub fn to_string(&self) -> String {
+        self.token.clone()
+    }
+}
+
+impl Ship {
+    pub fn list_deposits(&self) {
+        for mount in &self.mounts {
+            for deposit in &mount.deposits {
+                println!("{:?}", deposit);
+            }
+        }
+    }
 }

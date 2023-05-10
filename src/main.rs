@@ -2,7 +2,7 @@ use std::fs;
 // use reqwest::{Client, Error};
 use serde_json::{Result, Value};
 
-// use spacetraders::Data;
+use spacetraders::Player;
 
 fn main() -> Result<()> {
     // let mut data = HashMap::new();
@@ -23,9 +23,10 @@ fn main() -> Result<()> {
     let contents = fs::read_to_string("response.example.json")
         .expect("File not found");
 
-    let json: Value = serde_json::from_str(&contents)?;
+    let player: Player = serde_json::from_str(&contents).unwrap();
 
-    println!("{:?}", json);
+    println!("{:?}", player.data.to_string());
+    player.data.ship.list_deposits();
 
     Ok(())
 
